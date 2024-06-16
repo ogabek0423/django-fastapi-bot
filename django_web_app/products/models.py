@@ -13,6 +13,9 @@ class TelegramUser(models.Model):
         ordering = ['id']
         indexes = [models.Index(fields=['id'])]
 
+    def __str__(self):
+        return self.username
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -22,6 +25,9 @@ class Category(models.Model):
         db_table = 'category'
         ordering = ['id']
         indexes = [models.Index(fields=['id'])]
+
+    def __str__(self):
+        return self.name
 
 
 class Product(models.Model):
@@ -38,6 +44,9 @@ class Product(models.Model):
         ordering = ['id']
         indexes = [models.Index(fields=['id'])]
 
+    def __str__(self):
+        return self.name
+
 
 class Coupon(models.Model):
     code = models.CharField(max_length=50)
@@ -47,6 +56,9 @@ class Coupon(models.Model):
         db_table = 'coupons'
         ordering = ['id']
         indexes = [models.Index(fields=['id'])]
+
+    def __str__(self):
+        return self.code
 
 
 class Payment(models.Model):
@@ -62,3 +74,5 @@ class Payment(models.Model):
         ordering = ['id']
         indexes = [models.Index(fields=['id'])]
 
+    def __str__(self):
+        return self.user.first_name

@@ -16,6 +16,9 @@ class UserInfo(models.Model):
         ordering = ['id']
         indexes = [models.Index(fields=['id'])]
 
+    def __str__(self):
+        return self.user.first_name
+
 
 class StaffInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -29,6 +32,8 @@ class StaffInfo(models.Model):
         ordering = ['id']
         indexes = [models.Index(fields=['id'])]
 
+    def __str__(self):
+        return self.user.last_name
 
 class Blog(models.Model):
     text = models.TextField()
@@ -39,6 +44,9 @@ class Blog(models.Model):
         db_table = 'blog'
         ordering = ['id']
         indexes = [models.Index(fields=['id'])]
+
+    def __str__(self):
+        return self.user.first_name
 
 
 class Problem(models.Model):
@@ -51,3 +59,5 @@ class Problem(models.Model):
         ordering = ['id']
         indexes = [models.Index(fields=['id'])]
 
+    def __str__(self):
+        return self.user_email

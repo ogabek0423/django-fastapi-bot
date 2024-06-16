@@ -1,0 +1,4 @@
+.env
+telegram_bot_app/venv
+django_web_app/venv
+fastapi_app/venv

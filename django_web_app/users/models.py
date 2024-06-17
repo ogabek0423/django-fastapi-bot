@@ -23,7 +23,7 @@ class UserInfo(models.Model):
 class StaffInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     photo = models.ImageField(upload_to='staff_photos/')
-    work_time = models.CharField(max_length=50)
+    work_time = models.CharField(max_length=100)
     phone = models.CharField(max_length=20)
     experience = models.TextField()
 

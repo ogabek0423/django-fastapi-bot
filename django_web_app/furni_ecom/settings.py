@@ -40,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'furni_ecom.middleware.MethodOverrideMiddleware',
 ]
 
 ROOT_URLCONF = 'furni_ecom.urls'

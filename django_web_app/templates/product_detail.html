@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.name }}</title>
+</head>
+<body>
+    <h1>{{ product.name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+    <form method="post" action="{% url 'product_detail' product.pk %}">
+        {% csrf_token %}
+        <a href="{% url 'delete' product.id %}">Delete</a>
+    </form>
+    <a href="{% url 'product_list' %}">Back to list</a>
+</body>
+</html>

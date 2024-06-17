@@ -42,8 +42,22 @@
 					</ul>
 
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-						<li><a class="nav-link" href="#"><img src="../static/product/images/user.svg"></a></li>
-						<li><a class="nav-link" href="cart.html"><img src="../static/product/images/cart.svg"></a></li>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                              <img src="../static/product/images/user.svg">
+                            </button>
+                            <ul style="background-color: #0f5132" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                              {% if user.is_authenticated %}
+                                 <button style="margin-left: 20px; border-radius: 40%"><a href="{% url 'myprofile' %}">   My Profile</a></button>  <br> <br>
+                                 <button style="margin-left: 20px; border-radius: 40%"><a href="{% url 'logout' %}">   Logout</a></button>
+                                {% else %}
+                                  <button style="margin-left: 20px; border-radius: 40%">  <a href="{% url 'login' %}">   Login</a></button> <br> <br>
+                                   <button style="margin-left: 20px; border-radius: 40%"> <a href="{% url 'register' %}">   Register</a> </button>
+                                {% endif %}
+                            </ul>
+                        </div>
+
+                          <li><a class="nav-link" href="cart.html"><img src="../static/product/images/cart.svg"></a></li>
 					</ul>
 				</div>
 			</div>
@@ -144,8 +158,8 @@
 				<div class="border-top copyright">
 					<div class="row pt-4">
 						<div class="col-lg-6">
-							<p class="mb-2 text-center text-lg-start">Copyright &copy;<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; Designed with love by <a href="https://untree.co">Untree.co</a> <!-- License information: https://untree.co/license/ -->
-            </p>
+							<p class="mb-2 text-center text-lg-start">Copyright &copy;<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; Designed with love by Obidov <!-- License information: https://untree.co/license/ -->
+                        </p>
 						</div>
 
 						<div class="col-lg-6 text-center text-lg-end">
@@ -166,6 +180,8 @@
 		<script src="../static/product/js/bootstrap.bundle.min.js"></script>
 		<script src="../static/product/js/tiny-slider.js"></script>
 		<script src="../static/product/js/custom.js"></script>
+
+
 	</body>
 
 </html>

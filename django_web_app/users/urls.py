@@ -18,5 +18,8 @@ urlpatterns = [
     path('problems/<int:pk>/', ProblemView.as_view(), name='problem_detail'),
     path('problems/add/', AddProblem.as_view(), name='problem_add'),
     path('problems/delete/<int:pk>/', problem_delete, name='problem_delete'),
-
+    path('login/', UserLoginView.as_view(), name='login'),
+    path('logout/', LogOutView.as_view(), name='logout'),
+    path('register/', UserRegisterView.as_view(), name='register'),
+    path('myprofile/', MyProfileView.as_view(), name='myprofile'),
 ]

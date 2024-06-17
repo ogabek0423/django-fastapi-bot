@@ -1,11 +1,98 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import *
 from .forms import *
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
+from django.contrib.auth.forms import AuthenticationForm
+
+
+class UserLoginView(View):
+    def get(self, request):
+        form = UserLoginForm()
+        context = {'form': form}
+        return render(request, 'login.html', context)
+
+    def post(self, request):
+        username = request.POST['username']
+        password = request.POST['password']
+        data = {
+            "username": username,
+            "password": password
+        }
+        login_form = AuthenticationForm(data=data)
+
+        if login_form.is_valid():
+            user = login_form.get_user()
+            login(request, user)
+            return redirect("index")
+        else:
+
+            context = {
+                "form": login_form,
+            }
+            return render(request, "login.html", context)
+
+
+class UserRegisterView(View):
+    def get(self, request):
+        form = UserRegisterForm()
+        context = {'form': form}
+        return render(request, 'register.html', context)
+
+
+    def post(self, request):
+        create_form = UserRegisterForm(data=request.POST)
+        if create_form.is_valid():
+            create_form.save()
+            return redirect('login')
+
+        else:
+            context = {'form': create_form}
+            return render(request, 'register.html', context)
+
+
+class LogOutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('index')
+
+
+class MyProfileView(View):
+    def get(self, request):
+        user = User.objects.get(username=request.user.username)
+
+        context = {
+                'user': user,
+            }
+        return render(request, 'my-profile.html', context)
+
+    def post(self, request, pk=None):
+        m_user = None
+        if pk:
+            m_user = User.objects.get(id=pk)
+            form = UserRegisterForm(request.POST, instance=m_user)
+        elif user is None:
+            form = UserRegisterForm(request.POST)
+        else:
+            return redirect('')
+
+        if form.is_valid():
+            form.save()
+            return redirect('')
+
+        if pk:
+            return render(request, '.html', {'form': form, 'user': m_user})
+        else:
+            return render(request, '.html', {'form': form})
+
+def profile_delete(request, pk):
+    user = User.objects.get(id=pk)
+    user.delete()
+    return redirect('index')
 
 
 class UserInfoView(View):

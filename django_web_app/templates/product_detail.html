@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
+{%extends 'base.html'%}
+{%load static%}
+{%block content%}
+
+
     <title>{{ product.name }}</title>
-</head>
-<body>
     <h1>{{ product.name }}</h1>
     <form method="post">
         {% csrf_token %}
@@ -15,5 +15,5 @@
         <a href="{% url 'delete' product.id %}">Delete</a>
     </form>
     <a href="{% url 'product_list' %}">Back to list</a>
-</body>
-</html>
+
+{% endblock %}

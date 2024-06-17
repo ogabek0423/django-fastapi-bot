@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add New Product</title>
-</head>
-<body>
+{%extends 'base.html'%}
+{%load static%}
+{%block content%}
+
     <h1>Add New Product</h1>
     <form method="POST">
         {% csrf_token %}
@@ -11,5 +9,5 @@
         <button type="submit">Save</button>
     </form>
     <a href="{% url 'product_list' %}">Back to list</a>
-</body>
-</html>
+
+{% endblock %}

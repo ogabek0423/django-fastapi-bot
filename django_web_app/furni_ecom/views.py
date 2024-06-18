@@ -11,12 +11,14 @@ class FurniEcomView(View):
         telegram_user = TelegramUser.objects.all()
         coupons = Coupon.objects.all()
         payments = Payment.objects.all()
+        blogs = Blog.objects.all()
         context = {
             'products': products,
             'categories': categories,
             'telegram_user': telegram_user,
             'coupons': coupons,
-            'payments': payments
+            'payments': payments,
+            'blogs': blogs
         }
 
         return render(request, 'index.html', context=context)

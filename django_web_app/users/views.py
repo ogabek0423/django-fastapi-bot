@@ -10,6 +10,11 @@ from django.views.generic import View
 from django.contrib.auth.forms import AuthenticationForm
 
 
+class ThankView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'thankyou.html')
+
+
 class UserLoginView(View):
     def get(self, request):
         form = UserLoginForm()
@@ -61,49 +66,41 @@ class LogOutView(View):
         return redirect('index')
 
 
-class MyProfileView(View):
+class MyProfileView(LoginRequiredMixin, View):
     def get(self, request):
-        user = User.objects.get(username=request.user.username)
+        user = User.objects.get(id=request.user.id)
+        # form = UserRegisterForm(instance=user)
+        return render(request, 'my-profile.html', {'user': user})
 
-        context = {
-                'user': user,
-            }
-        return render(request, 'my-profile.html', context)
 
-    def post(self, request, pk=None):
-        m_user = None
-        if pk:
-            m_user = User.objects.get(id=pk)
-            form = UserRegisterForm(request.POST, instance=m_user)
-        elif user is None:
-            form = UserRegisterForm(request.POST)
-        else:
-            return redirect('')
-
+@login_required(login_url='login')
+def edit_profile(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('login')
+    else:
+        form = UserRegisterForm(instance=request.user)
+    return render(request, 'edit-profile.html', {'form': form})
 
-        if pk:
-            return render(request, '.html', {'form': form, 'user': m_user})
-        else:
-            return render(request, '.html', {'form': form})
 
-def profile_delete(request, pk):
-    user = User.objects.get(id=pk)
+@login_required(login_url='login')
+def profile_delete(request):
+    user = User.objects.get(id=request.user.id)
     user.delete()
-    return redirect('index')
+    return redirect('login')
 
 
-class UserInfoView(View):
+class UserInfoView(LoginRequiredMixin, View):
     def get(self, request, pk=None):
         if pk:
             user = UserInfo.objects.get(id=pk)
             form = UserForm(instance=user)
-            return render(request, '.html', {'form': form, 'user': user})
+            return render(request, 'user-detail.html', {'form': form, 'user': user})
         else:
             users = UserInfo.objects.all()
-            return render(request, '.html', {'users': users})
+            return render(request, 'users.html', {'users': users})
 
     def post(self, request, pk=None):
         user = None
@@ -113,47 +110,48 @@ class UserInfoView(View):
         elif user is None:
             form = UserForm(request.POST)
         else:
-            return redirect('')
+            return redirect('users')
 
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('users')
 
         if pk:
-            return render(request, '.html', {'form': form, 'user': user})
+            return render(request, 'user-detail.html', {'form': form, 'user': user})
         else:
-            return render(request, '.html', {'form': form})
+            return render(request, 'users.html', {'form': form})
 
-
+@login_required(login_url='login')
 def user_delete(request, pk):
     user = UserInfo.objects.get(id=pk)
     user.delete()
-    return redirect('')
+    return redirect('users')
 
 
-class AddUser(View):
+class AddUser(LoginRequiredMixin, View):
     def get(self, request):
         form = UserForm()
-        return render(request, '.html', context={'form': form})
+        return render(request, 'add-user.html', context={'form': form})
 
     def post(self, request):
         form = UserForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('users')
         else:
-            return render(request, '.html', status=status.HTTP_400_BAD_REQUEST)
+            return render(request, 'add-user.html', status=status.HTTP_400_BAD_REQUEST)
 
 
-class StaffInfoView(View):
+class StaffInfoView(LoginRequiredMixin, View):
     def get(self, request, pk=None):
         if pk:
             staff = StaffInfo.objects.get(id=pk)
             form = StaffForm(instance=staff)
-            return render(request, '.html', {'form': form, 'staff': staff})
+            return render(request, 'staff-detail.html', {'form': form, 'staff': staff})
         else:
             staffs = StaffInfo.objects.all()
-            return render(request, '.html', {'staffs': staffs})
+            blogs = Blog.objects.all()
+            return render(request, 'about.html', {'staffs': staffs, 'blogs': blogs})
 
     def post(self, request, pk=None):
         staff = None
@@ -163,47 +161,47 @@ class StaffInfoView(View):
         elif staff is None:
             form = StaffForm(request.POST)
         else:
-            return redirect('')
+            return redirect('staffs')
 
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('staffs')
 
         if pk:
-            return render(request, '.html', {'form': form, 'user': user})
+            return render(request, 'staff-detail.html', {'form': form, 'user': user})
         else:
-            return render(request, '.html', {'form': form})
+            return render(request, 'about.html', {'form': form})
 
-
+@login_required(login_url='login')
 def staff_delete(request, pk):
     staff = StaffInfo.objects.get(id=pk)
     staff.delete()
-    return redirect('')
+    return redirect('staffs')
 
 
-class AddStaff(View):
+class AddStaff(LoginRequiredMixin, View):
     def get(self, request):
         form = StaffForm()
-        return render(request, '.html', context={'form': form})
+        return render(request, 'add-staff.html', context={'form': form})
 
     def post(self, request):
         form = StaffForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('staffs')
         else:
-            return render(request, '.html', status=status.HTTP_400_BAD_REQUEST)
+            return render(request, 'add-staff.html', status=status.HTTP_400_BAD_REQUEST)
 
 
-class BlogView(View):
+class BlogView(LoginRequiredMixin, View):
     def get(self, request, pk=None):
         if pk:
             blog = Blog.objects.get(id=pk)
             form = BlogForm(instance=blog)
-            return render(request, '.html', {'form': form, 'blog': blog})
+            return render(request, 'blog-detail.html', {'form': form, 'blog': blog})
         else:
             blogs = Blog.objects.all()
-            return render(request, '.html', {'blogs': blogs})
+            return render(request, 'blog.html', {'blogs': blogs})
 
     def post(self, request, pk=None):
         blog = None
@@ -213,48 +211,48 @@ class BlogView(View):
         elif blog is None:
             form = BlogForm(request.POST)
         else:
-            return redirect('')
+            return redirect('blogs')
 
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('blogs')
 
         if pk:
-            return render(request, '.html', {'form': form, 'blog': blog})
+            return render(request, 'blog-detail.html', {'form': form, 'blog': blog})
         else:
-            return render(request, '.html', {'form': form})
+            return render(request, 'blog.html', {'form': form})
 
-
+@login_required(login_url='login')
 def blog_delete(request, pk):
     blog = Blog.objects.get(id=pk)
     blog.delete()
-    return redirect('')
+    return redirect('blogs')
 
 
-class AddBlog(View):
+class AddBlog(LoginRequiredMixin, View):
     def get(self, request):
         form = BlogForm()
-        return render(request, '.html', context={'form': form})
+        return render(request, 'add-blog.html', context={'form': form})
 
     def post(self, request):
         form = BlogForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('blogs')
         else:
-            return render(request, '.html', status=status.HTTP_400_BAD_REQUEST)
+            return render(request, 'add-blog.html', status=status.HTTP_400_BAD_REQUEST)
 
 
 
-class ProblemView(View):
+class ProblemView(LoginRequiredMixin, View):
     def get(self, request, pk=None):
         if pk:
             problem = Problem.objects.get(id=pk)
-            form = ProblemForm(instance=blog)
-            return render(request, '.html', {'form': form, 'problem': problem})
+            form = ProblemForm(instance=problem)
+            return render(request, 'problem-detail.html', {'form': form, 'problem': problem})
         else:
             problems = Problem.objects.all()
-            return render(request, '.html', {'problems': problems})
+            return render(request, 'problems.html', {'problems': problems})
 
     def post(self, request, pk=None):
         problem = None
@@ -264,34 +262,34 @@ class ProblemView(View):
         elif problem is None:
             form = ProblemForm(request.POST)
         else:
-            return redirect('')
+            return redirect('problems')
 
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('problems')
 
         if pk:
-            return render(request, '.html', {'form': form, 'problem': problem})
+            return render(request, 'problem-detail.html', {'form': form, 'problem': problem})
         else:
-            return render(request, '.html', {'form': form})
+            return render(request, 'problems.html', {'form': form})
 
-
+@login_required(login_url='login')
 def problem_delete(request, pk):
     problem = Problem.objects.get(id=pk)
     problem.delete()
-    return redirect('')
+    return redirect('problems')
 
 
-class AddProblem(View):
+class AddProblem(LoginRequiredMixin, View):
     def get(self, request):
         form = ProblemForm()
-        return render(request, '.html', context={'form': form})
+        return render(request, 'contact.html', context={'form': form})
 
     def post(self, request):
         form = ProblemForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('thanks')
         else:
-            return render(request, '.html', status=status.HTTP_400_BAD_REQUEST)
+            return render(request, 'contact.html', status=status.HTTP_400_BAD_REQUEST)
 

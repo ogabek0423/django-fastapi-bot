@@ -5,7 +5,7 @@ from .models import *
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'price', 'category', 'count', 'endurance']
+        fields = ['name', 'description', 'price', 'category', 'count', 'endurance', 'image']
 
     def save(self, commit=True):
         product = super().save(commit)

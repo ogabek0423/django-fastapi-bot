@@ -4,9 +4,20 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from .models import *
 from .forms import *
+from users.models import *
 
 
-class ProductView(View):
+class ServiceView(LoginRequiredMixin, View):
+    def get(self, request):
+        products = Product.objects.all()
+        blogs = Blog.objects.all()
+        context = {
+            'products': products,
+            'blogs': blogs
+        }
+        return render(request, 'services.html', context)
+
+class ProductView(LoginRequiredMixin, View):
     def get(self, request, pk=None):
         if pk:
             product = Product.objects.get(id=pk)
@@ -15,7 +26,7 @@ class ProductView(View):
         else:
             products = Product.objects.all()
             categories = Category.objects.all()
-            return render(request, 'product_list.html', {'products': products, 'categories': categories})
+            return render(request, 'shop.html', {'products': products, 'categories': categories})
 
     def post(self, request, pk=None):
         product = None
@@ -25,24 +36,24 @@ class ProductView(View):
         elif product is None:
             form = ProductForm(request.POST)
         else:
-            return redirect('product_list')
+            return redirect('shop')
 
         if form.is_valid():
             form.save()
-            return redirect('product_list')
+            return redirect('shop')
 
         if pk:
             return render(request, 'product_detail.html', {'form': form, 'product': product})
         else:
             return render(request, 'product_form.html', {'form': form})
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def product_delete(request, pk):
     product = Product.objects.get(id=pk)
     product.delete()
-    return redirect('product_list')
+    return redirect('shop')
 
-class AddProduct(View):
+class AddProduct(LoginRequiredMixin, View):
     def get(self, request):
         form = ProductForm()
         return render(request, 'product_form.html', context={'form': form})
@@ -51,70 +62,70 @@ class AddProduct(View):
         form = ProductForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('product_list')
+            return redirect('shop')
         else:
             return render(request, 'product_form.html', status=status.HTTP_400_BAD_REQUEST)
 
 
-class CouponView(View):
+class CouponView(LoginRequiredMixin, View):
     def get(self, request, pk=None):
         if pk:
             coupon = Coupon.objects.get(id=pk)
             form = CouponForm(instance=coupon)
-            return render(request, '.html', {'form': form, 'coupon': coupon})
+            return render(request, 'coupon-detail.html', {'form': form, 'coupon': coupon})
         else:
             coupons = Coupon.objects.all()
-            return render(request, '.html', {'coupons': coupons})
+            return render(request, 'coupons.html', {'coupons': coupons})
 
     def post(self, request, pk=None):
         coupon = None
         if pk:
             coupon = Coupon.objects.get(id=pk)
             form = CouponForm(request.POST, instance=coupon)
-        elif pay is None:
+        elif coupon is None:
             form = CouponForm(request.POST)
         else:
-            return redirect('')
+            return redirect('coupons')
 
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('coupons')
 
         if pk:
-            return render(request, '.html', {'form': form, 'product': product})
+            return render(request, 'coupons.html', {'form': form, 'product': product})
         else:
-            return render(request, '.html', {'form': form})
+            return render(request, 'add-coupon.html', {'form': form})
 
-
+@login_required(login_url='login')
 def coupon_delete(request, pk):
     coupon = Coupon.objects.get(id=pk)
     coupon.delete()
-    return redirect('')
+    return redirect('coupons')
 
 
-class AddCoupon(View):
+class AddCoupon(LoginRequiredMixin, View):
     def get(self, request):
         form = CouponForm()
-        return render(request, '.html', context={'form': form})
+        return render(request, 'add-coupon.html', context={'form': form})
 
     def post(self, request):
         form = CouponForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('coupons')
         else:
-            return render(request, '.html', status=status.HTTP_400_BAD_REQUEST)
+            return render(request, 'add-coupon.html', status=status.HTTP_400_BAD_REQUEST)
 
 
-class PaymentView(View):
+class PaymentView(LoginRequiredMixin, View):
     def get(self, request, pk=None):
         if pk:
             pay = Payment.objects.get(id=pk)
             form = PaymentForm(instance=pay)
-            return render(request, '.html', {'form': form, 'pay': pay})
+            return render(request, 'pay-detail.html', {'form': form, 'pay': pay})
         else:
             pays = Product.objects.all()
-            return render(request, '.html', {'pays': pays})
+            return render(request, 'pays.html', {'pays': pays})
 
     def post(self, request, pk=None):
         pay = None
@@ -124,46 +135,46 @@ class PaymentView(View):
         elif pay is None:
             form = PaymentForm(request.POST)
         else:
-            return redirect('')
+            return redirect('payments')
 
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('payments')
 
         if pk:
-            return render(request, '.html', {'form': form, 'product': product})
+            return render(request, 'pay-detail.html', {'form': form, 'pay': pay})
         else:
-            return render(request, '.html', {'form': form})
+            return render(request, 'pays.html', {'form': form})
 
-
+@login_required(login_url='login')
 def pay_delete(request, pk):
     pay = Payment.objects.get(id=pk)
     pay.delete()
-    return redirect('')
+    return redirect('payments')
 
 
-class AddPay(View):
+class AddPay(LoginRequiredMixin, View):
     def get(self, request):
         form = PaymentForm()
-        return render(request, '.html', context={'form': form})
+        return render(request, 'add-pay.html', context={'form': form})
 
     def post(self, request):
         form = PaymentForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('payments')
         else:
-            return render(request, '.html', status=status.HTTP_400_BAD_REQUEST)
+            return render(request, 'add-pay.html', status=status.HTTP_400_BAD_REQUEST)
 
-class TelegramUsersView(View):
+class TelegramUsersView(LoginRequiredMixin, View):
     def get(self, request, pk=None):
         if pk:
             user = TelegramUser.objects.get(id=pk)
             form = TelegramForm(instance=user)
-            return render(request, '.html', {'form': form, 'user': user})
+            return render(request, 'detail-tg.html', {'form': form, 'user': user})
         else:
             users = TelegramUser.objects.all()
-            return render(request, '.html', {'users': users})
+            return render(request, 'tg.html', {'users': users})
 
     def post(self, request, pk=None):
         user = None
@@ -173,33 +184,33 @@ class TelegramUsersView(View):
         elif pay is None:
             form = TelegramForm(request.POST)
         else:
-            return redirect('')
+            return redirect('telegramuser')
 
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('telegramuser')
 
         if pk:
-            return render(request, '.html', {'form': form, 'user': user})
+            return render(request, 'detail-tg.html', {'form': form, 'user': user})
         else:
-            return render(request, '.html', {'form': form})
+            return render(request, 'tg.html', {'form': form})
 
-
+@login_required(login_url='login')
 def user_delete(request, pk):
     user = TelegramUser.objects.get(id=pk)
     user.delete()
-    return redirect('')
+    return redirect('telegramuser')
 
 
-class AddUser(View):
+class AddUser(LoginRequiredMixin, View):
     def get(self, request):
         form = TelegramForm()
-        return render(request, '.html', context={'form': form})
+        return render(request, 'add-tg.html', context={'form': form})
 
     def post(self, request):
         form = TelegramForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('')
+            return redirect('telegramuser')
         else:
-            return render(request, '.html', status=status.HTTP_400_BAD_REQUEST)
+            return render(request, 'add-tg.html', status=status.HTTP_400_BAD_REQUEST)

@@ -98,7 +98,7 @@ async def create_user(user: UserBase, Authentiztion: AuthJWT = Depends()):
 
 
 @user_router.put('/{id}')
-async def update_address(id: int, user: UserBase, Authentiztion: AuthJWT = Depends()):
+async def update(id: int, user: UserBase, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()
     #

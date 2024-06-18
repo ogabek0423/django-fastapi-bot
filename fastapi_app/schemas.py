@@ -51,7 +51,7 @@ class ProductBase(BaseModel):
     count: int
     endurance: int
     id: int
-    created_date: datetime
+
 
 
 
@@ -67,7 +67,7 @@ class PaymentBase(BaseModel):
     pay_type: str
     coupon_id: Optional[int] = None
     id: int
-    pay_time: datetime
+
 
 
 class UserInfoBase(BaseModel):
@@ -78,7 +78,7 @@ class UserInfoBase(BaseModel):
     home_number: str
     user_number: str
     id: int
-    last_update: datetime
+
 
 
 class StaffInfoBase(BaseModel):

@@ -1,6 +1,4 @@
-
 from fastapi import APIRouter
-
 from database import Session, ENGINE
 from schemas import *
 from db_models import *
@@ -47,7 +45,7 @@ async def get_blogs():
 
 
 @address_router.get('/{id}')
-async def get_addresses(id: int, Authentiztion: AuthJWT = Depends()):
+async def get_one(id: int, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()
     #
@@ -148,7 +146,7 @@ async def update(id: int, blog: BlogBase, Authentiztion: AuthJWT = Depends()):
 
 
 @address_router.delete('/{id}')
-async def delete_address(id: int, Authentiztion: AuthJWT = Depends()):
+async def delete(id: int, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()
     #

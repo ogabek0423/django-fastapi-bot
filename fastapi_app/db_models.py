@@ -1,10 +1,13 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean, Text, DECIMAL
-from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy import Boolean, Column, String, Integer, ForeignKey, DateTime, Text, Numeric
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 import datetime
+from database import Base, Session
+
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "auth_user"
 
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String, index=True)
@@ -15,96 +18,94 @@ class User(Base):
     is_staff = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
+    user_info = relationship("UserInfo", back_populates="user")
+    staff_info = relationship("StaffInfo", back_populates="user")
+    payments = relationship("Payment", back_populates="user")
+    blogs = relationship("Blog", back_populates="user")
 
-
-class UserInfo(Base):
-    __tablename__ = "user_info"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    your_photo = Column(String)
-    city = Column(String)
-    street = Column(String)
-    home_number = Column(String)
-    user_number = Column(String)
-    last_update = Column(DateTime, default=datetime.datetime.utcnow)
-
-
-class StaffInfo(Base):
-    __tablename__ = "staff_info"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    photo = Column(String)
-    work_time = Column(String)
-    phone = Column(String)
-    experience = Column(Text)
 
 
 class TelegramUser(Base):
-    __tablename__ = "telegram_users"
-
+    __tablename__ = 'telegram_users'
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    fullname = Column(String)
-    chat_id = Column(String)
+    username = Column(String(150))
+    fullname = Column(String(150))
+    chat_id = Column(String(150))
     created_time = Column(DateTime, default=datetime.datetime.utcnow)
 
-
 class Category(Base):
-    __tablename__ = "category"
-
+    __tablename__ = 'category'
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
-    last_update = Column(DateTime, default=datetime.datetime.utcnow)
-
+    name = Column(String(100))
+    last_update = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    product = relationship("Product", back_populates="category")
 
 class Product(Base):
-    __tablename__ = "products"
-
+    __tablename__ = 'products'
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
+    name = Column(String(100))
+    image = Column(String)
     description = Column(Text)
-    category_id = Column(Integer, ForeignKey("category.id"))
-    price = Column(DECIMAL)
+    category_id = Column(Integer, ForeignKey('category.id'))
+    category = relationship('Category', back_populates='product')
+    price = Column(Numeric(10, 2))
     count = Column(Integer)
     created_date = Column(DateTime, default=datetime.datetime.utcnow)
     endurance = Column(Integer)
 
 
 class Coupon(Base):
-    __tablename__ = "coupons"
-
+    __tablename__ = 'coupons'
     id = Column(Integer, primary_key=True, index=True)
-    code = Column(String)
-    value = Column(DECIMAL)
-
+    code = Column(String(50))
+    value = Column(Numeric(10, 2))
+    pay = relationship("Payment", back_populates="coupon")
 
 class Payment(Base):
-    __tablename__ = "payments"
-
+    __tablename__ = 'payments'
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey('auth_user.id'))
+    user = relationship('User', back_populates='payments')
     product_list = Column(Text)
-    amount = Column(DECIMAL)
-    pay_type = Column(String)
+    amount = Column(Numeric(10, 2))
+    pay_type = Column(String(50))
     pay_time = Column(DateTime, default=datetime.datetime.utcnow)
-    coupon_id = Column(Integer, ForeignKey("coupons.id"))
+    coupon_id = Column(Integer, ForeignKey('coupons.id'))
+    coupon = relationship('Coupon', back_populates='pay')
 
+class UserInfo(Base):
+    __tablename__ = 'user_info'
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('auth_user.id'))
+    user = relationship('User', back_populates='user_info')
+    your_photo = Column(String)
+    city = Column(String(100))
+    street = Column(String(100))
+    home_number = Column(String(50))
+    user_number = Column(String(20))
+    last_update = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+class StaffInfo(Base):
+    __tablename__ = 'staff_info'
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('auth_user.id'))
+    user = relationship('User', back_populates='staff_info')
+    photo = Column(String)
+    work_time = Column(String(100))
+    phone = Column(String(20))
+    experience = Column(Text)
 
 class Blog(Base):
-    __tablename__ = "blog"
-
+    __tablename__ = 'blog'
     id = Column(Integer, primary_key=True, index=True)
     text = Column(Text)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey('auth_user.id'))
+    user = relationship('User', back_populates='blogs')
     created_time = Column(DateTime, default=datetime.datetime.utcnow)
 
-
 class Problem(Base):
-    __tablename__ = "problems"
-
+    __tablename__ = 'problems'
     id = Column(Integer, primary_key=True, index=True)
     problem_text = Column(Text)
-    user_email = Column(String)
+    user_email = Column(String, index=True)
     created_time = Column(DateTime, default=datetime.datetime.utcnow)

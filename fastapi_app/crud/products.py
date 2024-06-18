@@ -25,7 +25,7 @@ async def get_product(id: int):
 
 
 @product_router.post('/create')
-async def create_product(product: ProductBase):
+async def create_product(product: ProductBase, ):
     product_c = session.query(Product).filter(Product.id == product.id).first()
     cat = session.query(Category).filter(Category.id == product.category_id)
     if not product_c:

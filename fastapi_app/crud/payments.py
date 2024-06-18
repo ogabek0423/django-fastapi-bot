@@ -260,21 +260,21 @@ async def update_payment(id: int, update: PaymentBase, Authentiztion: AuthJWT = 
 
 @pay_router.delete("/{id}")
 async def delete_payment(id: int, Authentiztion: AuthJWT = Depends()):
-    # try:
-    #     Authentiztion.jwt_required()
-    #
-    # except:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
-    #
-    # check_user_token = Authentiztion.get_jwt_subject()
-    # check_user = session.query(User).filter(User.username == check_user_token).first()
-    # if check_user.is_superuser:
-    item = session.query(Payment).filter(Payment.id == id).first()
-    if item:
-        session.delete(item)
-        session.commit()
-        data = {"message": "Payment deleted successfully"}
-        return jsonable_encoder(data)
+    try:
+        Authentiztion.jwt_required()
 
-    return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="not found")
-    # return HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only admins can")
+    except:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
+
+    check_user_token = Authentiztion.get_jwt_subject()
+    check_user = session.query(User).filter(User.username == check_user_token).first()
+    if check_user.is_superuser:
+        item = session.query(Payment).filter(Payment.id == id).first()
+        if item:
+            session.delete(item)
+            session.commit()
+            data = {"message": "Payment deleted successfully"}
+            return jsonable_encoder(data)
+
+        return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="not found")
+    return HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only admins can")

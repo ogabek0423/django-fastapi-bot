@@ -21,6 +21,7 @@ class RegisterUser(BaseModel):
     username: str
     password: str
     email: str
+    date_joined: Optional[datetime]
 
 
 class LoginUser(BaseModel):
@@ -31,7 +32,7 @@ class LoginUser(BaseModel):
 class TelegramUserBase(BaseModel):
     username: str
     fullname: str
-    chat_id: str
+    chat_id: int
     id: int
 
 

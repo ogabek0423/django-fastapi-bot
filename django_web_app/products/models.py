@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 class TelegramUser(models.Model):
-    username = models.CharField(max_length=150)
+    username = models.CharField(max_length=150, null=True)
     fullname = models.CharField(max_length=150)
-    chat_id = models.CharField(max_length=150)
+    chat_id = models.BigIntegerField()
     created_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:

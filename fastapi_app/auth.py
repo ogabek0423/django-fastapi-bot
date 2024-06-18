@@ -7,7 +7,9 @@ from schemas import *
 from werkzeug import security
 from fastapi_jwt_auth import AuthJWT
 from fastapi.encoders import jsonable_encoder
-from django.contrib.auth.hashers import check_password, make_password
+import django
+import os
+from passlib.hash import django_pbkdf2_sha256
 
 
 a_router = APIRouter(prefix='/auth', tags=['auth'])
@@ -36,7 +38,7 @@ async def login(user: LoginUser, Authenzetion: AuthJWT = Depends()):
 
     user_check = session.query(User).filter(User.username == user.username).first()
 
-    if check_password(user.password, user_check.password):
+    if user_check and django_pbkdf2_sha256.verify(user.password, user_check.password):
         access_token = Authenzetion.create_access_token(subject=user_check.username)
         refresh_token = Authenzetion.create_refresh_token(subject=user_check.username)
         data = {
@@ -72,8 +74,9 @@ async def register(user: RegisterUser):
         last_name=user.last_name,
         username=user.username,
         email=user.email,
-        password=make_password(user.password),
-        address_id=user.address_id
+        password=django_pbkdf2_sha256.hash(user.password),
+        date_joined=user.date_joined
+
     )
 
     session.add(new_user)

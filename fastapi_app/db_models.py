@@ -18,6 +18,7 @@ class User(Base):
     is_staff = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
+    date_joined = Column(DateTime, default=datetime.datetime.utcnow)
     user_info = relationship("UserInfo", back_populates="user")
     staff_info = relationship("StaffInfo", back_populates="user")
     payments = relationship("Payment", back_populates="user")
@@ -30,7 +31,7 @@ class TelegramUser(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(150))
     fullname = Column(String(150))
-    chat_id = Column(String(150))
+    chat_id = Column(Integer)
     created_time = Column(DateTime, default=datetime.datetime.utcnow)
 
 class Category(Base):

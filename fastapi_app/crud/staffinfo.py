@@ -159,7 +159,7 @@ async def update(id: int, user: StaffInfoBase, Authentiztion: AuthJWT = Depends(
 # return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Only admins can edit this address')
 
 
-@user_router.delete('/{id}')
+@staff_info_router.delete('/{id}')
 async def delete_user(id: int, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()

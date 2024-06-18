@@ -117,7 +117,7 @@ async def update_c(id: int, c: CouponBase, Authentiztion: AuthJWT = Depends()):
     # return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can update city')
 
 
-@city_router.delete("/{id}")
+@cupon_router.delete("/{id}")
 async def delete_c(id: int, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()

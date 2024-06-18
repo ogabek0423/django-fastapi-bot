@@ -21,7 +21,7 @@ class User(Base):
     user_info = relationship("UserInfo", back_populates="user")
     staff_info = relationship("StaffInfo", back_populates="user")
     payments = relationship("Payment", back_populates="user")
-    blogs = relationship("Blog", back_populates="user")
+    blog = relationship("Blog", back_populates="user")
 
 
 
@@ -100,7 +100,7 @@ class Blog(Base):
     id = Column(Integer, primary_key=True, index=True)
     text = Column(Text)
     user_id = Column(Integer, ForeignKey('auth_user.id'))
-    user = relationship('User', back_populates='blogs')
+    user = relationship('User', back_populates='blog')
     created_time = Column(DateTime, default=datetime.datetime.utcnow)
 
 class Problem(Base):

@@ -14,13 +14,13 @@ product_router = APIRouter(prefix="/product")
 
 @product_router.get('/')
 async def get_products():
-    products = session.query(ProductsProduct).all()
+    products = session.query(Product).all()
     return jsonable_encoder(products)
 
 
 @product_router.get('/{id}')
 async def get_product(id: int):
-    product = session.query(ProductsProduct).filter(ProductsProduct.id == id).first()
+    product = session.query(Product).filter(Product.id == id).first()
     return jsonable_encoder(product)
 
 

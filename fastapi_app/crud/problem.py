@@ -29,7 +29,7 @@ async def get_all():
         {
             "id": c.id,
             "user_email": c.user_email,
-            "text": c.text,
+            "text": c.problem_text,
             "writed": c.created_time
         }
         for c in c_list
@@ -38,7 +38,7 @@ async def get_all():
 # return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
 
 
-@category_router.get("/{id}")
+@problem_router.get("/{id}")
 async def get_c(id: int):
     # try:
     #     Authentiztion.jwt_required()
@@ -54,7 +54,7 @@ async def get_c(id: int):
         {
             "id": c.id,
             "user_email": c.user_email,
-            "text": c.text,
+            "text": c.problem_text,
             "writed": c.created_time
         }
     ]
@@ -62,8 +62,8 @@ async def get_c(id: int):
     # return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='unauthorized')
 
 
-@category_router.post('/create')
-async def create_c(pro: Problembase, Authentiztion: AuthJWT = Depends()):
+@problem_router.post('/create')
+async def create_c(pro: ProblemBase, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()
     #
@@ -119,7 +119,7 @@ async def update_c(id: int, pro: ProblemBase, Authentiztion: AuthJWT = Depends()
     # return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can update city')
 
 
-@city_router.delete("/{id}")
+@problem_router.delete("/{id}")
 async def delete_c(id: int, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()

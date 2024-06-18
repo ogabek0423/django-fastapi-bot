@@ -48,7 +48,7 @@ async def get_users():
 # return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
 
 
-@user_router.get('/{id}')
+@user_info_router.get('/{id}')
 async def get_user(id: int, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()
@@ -85,7 +85,7 @@ async def get_user(id: int, Authentiztion: AuthJWT = Depends()):
 
 
 @user_info_router.post('/create')
-async def create_user(user: UserInfobase, Authentiztion: AuthJWT = Depends()):
+async def create_user(user: UserInfoBase, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()
     #
@@ -119,7 +119,7 @@ async def create_user(user: UserInfobase, Authentiztion: AuthJWT = Depends()):
     # return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can create new addresses")
 
 
-@user_router.put('/{id}')
+@user_info_router.put('/{id}')
 async def update(id: int, user: UserInfoBase, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()
@@ -161,7 +161,7 @@ async def update(id: int, user: UserInfoBase, Authentiztion: AuthJWT = Depends()
 # return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Only admins can edit this address')
 
 
-@user_router.delete('/{id}')
+@user_info_router.delete('/{id}')
 async def delete_user(id: int, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()

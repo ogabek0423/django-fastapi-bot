@@ -22,7 +22,7 @@ async def get_blogs():
     # check_user_token = Authentiztion.get_jwt_subject()
     # check_user = session.query(User).filter(User.username == check_user_token).first()
     # if check_user.is_active:
-    blogs = session.query(Blogs).all()
+    blogs = session.query(Blog).all()
     context = [
         {
             "id": blog.id,
@@ -44,7 +44,7 @@ async def get_blogs():
 # return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
 
 
-@address_router.get('/{id}')
+@blog_router.get('/{id}')
 async def get_one(id: int, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()
@@ -55,10 +55,10 @@ async def get_one(id: int, Authentiztion: AuthJWT = Depends()):
     # check_user_token = Authentiztion.get_jwt_subject()
     # check_user = session.query(User).filter(User.username == check_user_token).first()
     # if check_user.is_active:
-    blog = session.query(Blog).filter(Blog.id ==id).first()
+    blog = session.query(Blog).filter(Blog.id == id).first()
     context = [
         {
-            "id": blog.id,
+            "blog_id": blog.id,
             "user": {
                 "id": blog.user.id,
                 "first_name": blog.user.first_name,
@@ -76,7 +76,7 @@ async def get_one(id: int, Authentiztion: AuthJWT = Depends()):
     # return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
 
 
-@address_router.post('/create_address')
+@blog_router.post('/create')
 async def create(blog: BlogBase, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()
@@ -103,7 +103,7 @@ async def create(blog: BlogBase, Authentiztion: AuthJWT = Depends()):
     # return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can create new addresses")
 
 
-@address_router.put('/{id}')
+@blog_router.put('/{id}')
 async def update(id: int, blog: BlogBase, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()
@@ -145,7 +145,7 @@ async def update(id: int, blog: BlogBase, Authentiztion: AuthJWT = Depends()):
 # return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Only admins can edit this address')
 
 
-@address_router.delete('/{id}')
+@blog_router.delete('/{id}')
 async def delete(id: int, Authentiztion: AuthJWT = Depends()):
     # try:
     #     Authentiztion.jwt_required()

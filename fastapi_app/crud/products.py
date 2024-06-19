@@ -115,7 +115,7 @@ async def update(id: int, product: ProductBase, Authentiztion: AuthJWT = Depends
                 return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Berilgan id da malumot mavjud!")
             return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="berilgan city id mavjud emas!")
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Malumot topilmadi")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Only admins can edit this address')
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Only admins can edit this ')
 
 
 @product_router.delete('/{id}')
@@ -136,5 +136,5 @@ async def delete(id: int, Authentiztion: AuthJWT = Depends()):
             return HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Deleted")
 
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Malumot topilmadi")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can delete this address")
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can delete this ")
 

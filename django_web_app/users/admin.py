@@ -19,9 +19,9 @@ class UserInfoAdmin(ImportExportModelAdmin):
 
 @admin.register(StaffInfo)
 class StaffInfoAdmin(ImportExportModelAdmin):
-    list_display = ['user', 'number', 'experience']
-    list_display_links = ['user', 'number', 'experience']
-    search_fields = ['user', 'number', 'experience']
+    list_display = ['user', 'phone', 'experience']
+    list_display_links = ['user', 'phone', 'experience']
+    search_fields = ['user', 'phone', 'experience']
 
 
 @admin.register(Blog)

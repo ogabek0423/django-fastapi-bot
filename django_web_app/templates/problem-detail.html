@@ -1,6 +1,24 @@
-{{%extends 'base.html'%}
-{%load static%}
-{%block content%}
+<!-- problem-detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Detail</title>
+</head>
+<body>
+    <h1>Problem Detail</h1>
 
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
 
-{% endblock %}
+        <button type="submit">Update</button>
+    </form>
+
+    <form action="{% url 'delete-problem' pk=problem.pk %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
+</body>
+</html>

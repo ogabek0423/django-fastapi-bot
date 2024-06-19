@@ -39,17 +39,14 @@
 
 					<!-- End Column 1 -->
 					{% for i in products %}
-						<div class="col-12 col-md-4 col-lg-3 mb-5">
-						<a class="product-item" href="#">
-							<img src="{{ i.image.url }}" class="img-fluid product-thumbnail">
-							<a href="{% url 'product_detail' i.id%}"><h3 class="product-title">{{ i.name }}</h3></a>
-							<strong class="product-price">${{i.price}}</strong>
-
-							<span class="icon-cross">
-								<img src="../static/product/images/cross.svg" class="img-fluid">
-							</span>
-						</a>
-						</div>
+					<div class="card" style="width: 18rem;">
+					  <img src="{{ i.image.url }}" class="card-img-top" alt="...">
+					  <div class="card-body">
+						<h5 class="card-title">{{ i.name }}</h5>
+						<p class="card-text">{{ i.description }}</p>
+						<a href="{% url 'product_detail' i.id %}" class="btn btn-primary">Read more</a>
+					  </div>
+					</div>
 					{% endfor %}
 
 

@@ -1,7 +1,5 @@
-{%extends 'base.html'%}
-{%load static%}
-{%block content%}
-
+<!doctype html>
+    <body>
 
     <title>{{ product.name }}</title>
     <h1>{{ product.name }}</h1>
@@ -16,4 +14,5 @@
     </form>
     <a href="{% url 'product_list' %}">Back to list</a>
 
-{% endblock %}
+    </body>
+</html>

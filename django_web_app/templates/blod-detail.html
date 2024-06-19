@@ -1,6 +1,24 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
+<!-- blog-detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Detail</title>
+</head>
+<body>
+    <h1>Blog Detail</h1>
 
-{%endblock%}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
 
+        <button type="submit">Update</button>
+    </form>
+
+    <form action="{% url 'delete-blog' pk=blog.pk %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
+</body>
+</html>

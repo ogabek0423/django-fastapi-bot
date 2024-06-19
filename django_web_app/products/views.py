@@ -6,6 +6,10 @@ from .models import *
 from .forms import *
 from users.models import *
 
+class PrListView(LoginRequiredMixin, View):
+    def get(self, request):
+        products = Product.objects.all()
+        return render(request, 'product_list.html', {'products': products})
 
 class ServiceView(LoginRequiredMixin, View):
     def get(self, request):

@@ -1,19 +1,18 @@
-<!-- add-blog.html -->
+<!-- add-coupon.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Blog</title>
+    <title>Add Coupon</title>
 </head>
 <body>
-    <h1>Add Blog</h1>
+    <h1>Add Coupon</h1>
 
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-
-        <button type="submit">Submit</button>
+        <button type="submit">Add Coupon</button>
     </form>
 </body>
 </html>

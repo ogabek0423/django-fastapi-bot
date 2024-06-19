@@ -1,0 +1,28 @@
+<!-- pays.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments</title>
+</head>
+<body>
+    <h1>Payments</h1>
+
+    <a href="{% url 'add_payment' %}">Add Payment</a>
+
+    <ul>
+    {% for pay in pays %}
+        <li>
+            <strong>{{ pay.id }}</strong> - Amount: ${{ pay.amount }}
+            <form action="{% url 'pay_delete' pay.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Delete</button>
+            </form>
+            <a href="{% url 'pay_detail' pay.id %}">Edit</a>
+        </li>
+    {% endfor %}
+    </ul>
+
+</body>
+</html>

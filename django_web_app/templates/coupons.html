@@ -1,6 +1,28 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
+<!-- coupons.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupons</title>
+</head>
+<body>
+    <h1>Coupons</h1>
 
+    <a href="{% url 'add_coupon' %}">Add Coupon</a>
 
-{% endblock %}
+    <ul>
+    {% for coupon in coupons %}
+        <li>
+            <strong>{{ coupon.code }}</strong> - {{ coupon.discount }}% discount
+            <form action="{% url 'coupon_delete' coupon.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Delete</button>
+            </form>
+            <a href="{% url 'coupon_detail' coupon.id %}">Edit</a>
+        </li>
+    {% endfor %}
+    </ul>
+
+</body>
+</html>

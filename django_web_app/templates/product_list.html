@@ -1,17 +1,15 @@
-{%extends 'base.html'%}
-{%load static%}
-{%block content%}
-
+<!doctype html>
+    <body>
     <h1>Product List</h1>
     <ul>
         {% for product in products %}
             <li>
-                <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a>
+                <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
             </li>
         {% endfor %}
     </ul>
     <a href="{% url 'add_product' %}">Add product</a>
 
+    </body>
 
-{% endblock %}
-
+</html>

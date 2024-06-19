@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.template.defaultfilters import slugify
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 
 class TelegramUser(models.Model):
@@ -8,6 +11,7 @@ class TelegramUser(models.Model):
     fullname = models.CharField(max_length=150)
     chat_id = models.BigIntegerField()
     created_time = models.DateTimeField(auto_now_add=True)
+
 
     class Meta:
         db_table = 'telegram_users'
@@ -21,6 +25,7 @@ class TelegramUser(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=100)
     last_update = models.DateTimeField(auto_now=True)
+    slug = models.SlugField(max_length=150, unique=True)
 
     class Meta:
         db_table = 'category'
@@ -29,6 +34,11 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+@receiver(pre_save, sender=Category)
+def pre_save_category_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = slugify(instance.name)
 
 
 class Product(models.Model):
@@ -40,6 +50,7 @@ class Product(models.Model):
     count = models.IntegerField()
     created_date = models.DateTimeField(auto_now_add=True)
     endurance = models.IntegerField()
+    slug = models.SlugField(max_length=150, unique=True)
 
     class Meta:
         db_table = 'products'
@@ -49,6 +60,11 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+
+@receiver(pre_save, sender=Product)
+def pre_save_product_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = slugify(instance.name)
 
 class Coupon(models.Model):
     code = models.CharField(max_length=50)

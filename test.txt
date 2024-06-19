@@ -1,137 +1,77 @@
+import logging
 
-class TelegramUser(models.Model):
-    username = models.CharField(max_length=150)
-    fullname = models.CharField(max_length=150)
-    chat_id = models.CharField(max_length=150)
-    created_time = models.DateTimeField(auto_now_add=True)
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.callback_data import CallbackData
 
-    class Meta:
-        db_table = 'telegram_users'
-        ordering = ['id']
-        indexes = [models.Index(fields=['id'])]
+from loader import db
 
-    def __str__(self):
-        return self.username
+# Turli tugmalar uchun CallbackData-obyektlarni yaratib olamiz
+menu_cd = CallbackData("show_menu", "level", "category", "item_id")
+buy_item = CallbackData("buy", "item_id")
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-    last_update = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'category'
-        ordering = ['id']
-        indexes = [models.Index(fields=['id'])]
-
-    def __str__(self):
-        return self.name
+# Quyidagi funksiya yordamida menyudagi har bir element uchun calbback data yaratib olinadi
+# Agar mahsulot kategoriyasi va id raqami berilmagan bo'lsa 0 ga teng bo'ladi
+def make_callback_data(level, category="0", item_id="0"):
+    return menu_cd.new(
+        level=level, category=category, item_id=item_id
+    )
 
 
-class Product(models.Model):
-    name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='products/')
-    description = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    count = models.IntegerField()
-    created_date = models.DateTimeField(auto_now_add=True)
-    endurance = models.IntegerField()
-
-    class Meta:
-        db_table = 'products'
-        ordering = ['id']
-        indexes = [models.Index(fields=['id'])]
-
-    def __str__(self):
-        return self.name
+# Bizning menu 3 qavat (LEVEL) dan iborat
+# 0 - Kategoriyalar
+# 1 - Mahsulotlar
+# 2 - Yagona mahsulot
 
 
-class Coupon(models.Model):
-    code = models.CharField(max_length=50)
-    value = models.DecimalField(max_digits=10, decimal_places=2)
+# Kategoriyalar uchun keyboard yasab olamiz
+async def categories_keyboard():
+    CURRENT_LEVEL = 0
+    markup = InlineKeyboardMarkup(row_width=1)
+    categories = await db.get_categories()
 
-    class Meta:
-        db_table = 'coupons'
-        ordering = ['id']
-        indexes = [models.Index(fields=['id'])]
+    for category in categories:
+        number_of_items = await db.count_products(category_id["id"])
+        button_text = f"{category_id['id']} ({number_of_items} dona)"
+        callback_data = make_callback_data(level=CURRENT_LEVEL + 1, category=category_id["id"])
+        markup.insert(InlineKeyboardButton(text=button_text, callback_data=callback_data))
 
-    def __str__(self):
-        return self.code
-
-
-class Payment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product_list = models.TextField()
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    pay_type = models.CharField(max_length=50)
-    pay_time = models.DateTimeField(auto_now_add=True)
-    coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
-
-    class Meta:
-        db_table = 'payments'
-        ordering = ['id']
-        indexes = [models.Index(fields=['id'])]
-
-    def __str__(self):
-        return self.user.first_name
+    return markup
 
 
-class UserInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    your_photo = models.ImageField(upload_to='user_photos/')
-    city = models.CharField(max_length=100)
-    street = models.CharField(max_length=100)
-    home_number = models.CharField(max_length=50)
-    user_number = models.CharField(max_length=20)
-    last_update = models.DateTimeField(auto_now=True)
+# Berilgan kategoriya ostidagi mahsulotlarni qaytaruvchi keyboard
+async def items_keyboard(category_id):
+    CURRENT_LEVEL = 1
+    markup = InlineKeyboardMarkup(row_width=1)
+    products = await db.get_products(category_id)
 
-    class Meta:
-        db_table = 'user_info'
-        ordering = ['id']
-        indexes = [models.Index(fields=['id'])]
+    for product in products:
+        button_text = f"{product['name']} - ${product['price']}"
+        callback_data = make_callback_data(level=CURRENT_LEVEL + 1, category=category, item_id=product["id"])
+        markup.insert(InlineKeyboardButton(text=button_text, callback_data=callback_data))
 
-    def __str__(self):
-        return self.user.first_name
-
-
-class StaffInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    photo = models.ImageField(upload_to='staff_photos/')
-    work_time = models.CharField(max_length=100)
-    phone = models.CharField(max_length=20)
-    experience = models.TextField()
-
-    class Meta:
-        db_table = 'staff_info'
-        ordering = ['id']
-        indexes = [models.Index(fields=['id'])]
-
-    def __str__(self):
-        return self.user.last_name
-
-class Blog(models.Model):
-    text = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_time = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'blog'
-        ordering = ['id']
-        indexes = [models.Index(fields=['id'])]
-
-    def __str__(self):
-        return self.user.first_name
+    markup.row(
+        InlineKeyboardButton(
+            text="⬅️Ortga",
+            callback_data=make_callback_data(level=CURRENT_LEVEL - 1)
+        )
+    )
+    return markup
 
 
-class Problem(models.Model):
-    problem_text = models.TextField()
-    user_email = models.EmailField()
-    created_time = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'problems'
-        ordering = ['id']
-        indexes = [models.Index(fields=['id'])]
-
-    def __str__(self):
-        return self.user_email
+# Berilgan mahsulot uchun Xarid qilish va Ortga yozuvlarini chiqaruvchi tugma keyboard
+def item_keyboard(category_id, item_id):
+    CURRENT_LEVEL = 2
+    markup = InlineKeyboardMarkup(row_width=1)
+    markup.row(
+        InlineKeyboardButton(
+            text=f"🛒 Xarid qilish", callback_data=buy_item.new(item_id=item_id)
+        )
+    )
+    markup.row(
+        InlineKeyboardButton(
+            text="⬅️Ortga",
+            callback_data=make_callback_data(level=CURRENT_LEVEL - 1, category=category)
+        )
+    )
+    return markup

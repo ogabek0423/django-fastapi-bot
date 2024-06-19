@@ -71,7 +71,7 @@ WSGI_APPLICATION = 'furni_ecom.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "django_bot_fast",
+        "NAME": "final",
         "USER": "postgres",
         "PASSWORD": "23042005.o",
         "HOST": "127.0.0.1",

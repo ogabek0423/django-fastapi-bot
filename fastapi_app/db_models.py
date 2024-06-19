@@ -105,8 +105,8 @@ class Blog(Base):
     text = Column(Text)
     user_id = Column(Integer, ForeignKey('auth_user.id'))
     user = relationship('User', back_populates='blog')
-    created_time = Column(DateTime, auto_now_add=True)
-    slug = Column(String, max_length=100, unique=True)
+    created_time = Column(DateTime)
+    slug = Column(String, unique=True)
 
 class Problem(Base):
     __tablename__ = 'problems'
@@ -114,4 +114,4 @@ class Problem(Base):
     problem_text = Column(Text)
     user_email = Column(String, index=True)
     created_time = Column(DateTime, default=datetime.datetime.utcnow)
-    slug = Column(String, max_length=100, unique=True)
+    slug = Column(String, unique=True)

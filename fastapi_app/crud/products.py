@@ -70,7 +70,12 @@ async def create_product(product: ProductBase, Authentiztion: AuthJWT = Depends(
                 )
                 session.add(new_product)
                 session.commit()
-                return jsonable_encoder(new_product, detail="Product created successfully")
+                context = {
+                    'product': product,
+                    "code": 201,
+                    "message": "Product created successfully"
+                }
+                return jsonable_encoder(context)
             return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Category is not")
         else:
             return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Product already exists")

@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2arpk4y=rg#@)*wdr!_tq+qt_^2&f)p*!^#$5sb5j0e-$7!92b'
+SECRET_KEY = os.getenv('SECRET_KEY')
 LOGIN_URL = 'login'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'products',
+    'django_extensions',
+    'import_export',
 
 ]
 
@@ -71,10 +73,10 @@ WSGI_APPLICATION = 'furni_ecom.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "final",
-        "USER": "postgres",
-        "PASSWORD": "23042005.o",
-        "HOST": "127.0.0.1",
+        "NAME": os.getenv("DBNAME"),
+        "USER": os.getenv("USER"),
+        "PASSWORD": os.getenv("PASSWORD"),
+        "HOST": os.getenv("HOST"),
         "PORT": "5432",
     }
 }

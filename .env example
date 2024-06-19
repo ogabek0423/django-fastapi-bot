@@ -1,0 +1,9 @@
+SECRET_KEY=''
+DATABASE_ENGINE='postgresql'  # fast api uchun engine
+USER=''
+PASSWORD=''
+HOST=""
+DBNAME=''
+ip=localhost
+ADMINS=
+BOT_TOKEN=''

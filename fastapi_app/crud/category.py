@@ -53,7 +53,8 @@ async def get_c(id: int, Authentiztion: AuthJWT = Depends()):
             {
                 "id": c.id,
                 "name": c.name,
-                "last_upt": c.last_update
+                "last_upt": c.last_update,
+                "slug": c.slug
             }
         ]
         return jsonable_encoder(context)
@@ -77,7 +78,8 @@ async def create_c(cat: CategoryBase, Authentiztion: AuthJWT = Depends()):
 
         new_c = Category(
             id=cat.id,
-            name=cat.name
+            name=cat.name,
+            slug=cat.slug
         )
         session.add(new_c)
         session.commit()

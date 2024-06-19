@@ -30,7 +30,8 @@ async def get_all(Authentiztion: AuthJWT = Depends()):
                 "id": c.id,
                 "user_email": c.user_email,
                 "text": c.problem_text,
-                "writed": c.created_time
+                "writed": c.created_time,
+                "slug": c.slug
             }
             for c in c_list
         ]
@@ -55,7 +56,8 @@ async def get_c(id: int, Authentiztion: AuthJWT = Depends()):
                 "id": c.id,
                 "user_email": c.user_email,
                 "text": c.problem_text,
-                "writed": c.created_time
+                "writed": c.created_time,
+                "slug": c.slug
             }
         ]
         return jsonable_encoder(context)
@@ -80,7 +82,8 @@ async def create_c(pro: ProblemBase, Authentiztion: AuthJWT = Depends()):
         new_c = Problem(
             id=pro.id,
             user_email=pro.user_email,
-            text=pro.problem_text
+            text=pro.problem_text,
+            slug=pro.slug
         )
         session.add(new_c)
         session.commit()

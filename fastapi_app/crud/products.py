@@ -65,7 +65,8 @@ async def create_product(product: ProductBase, Authentiztion: AuthJWT = Depends(
                     category_id=product.category_id,
                     count=product.count,
                     endurance=product.endurance,
-                    image=product.image
+                    image=product.image,
+                    slug=product.slug
                 )
                 session.add(new_product)
                 session.commit()

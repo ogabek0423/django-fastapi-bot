@@ -35,7 +35,8 @@ async def get_users(Authentiztion: AuthJWT = Depends()):
                 "photo": data.photo,
                 "worktime": data.work_time,
                 "phone": data.phone,
-                'experience': data.experience
+                'experience': data.experience,
+                "slug": data.slug
 
             }
             for data in users
@@ -72,7 +73,8 @@ async def get_user(id: int, Authentiztion: AuthJWT = Depends()):
                 "photo": data.photo,
                 "worktime": data.work_time,
                 "phone": data.phone,
-                'experience': data.experience
+                'experience': data.experience,
+                "slug": data.slug
             }
 
         ]
@@ -103,7 +105,8 @@ async def create_user(user: StaffInfoBase, Authentiztion: AuthJWT = Depends()):
                 work_time=user.work_time,
                 phone=user.phone,
                 user_id=user.user_id,
-                experience=user.experience
+                experience=user.experience,
+                slug=user.slug
 
             )
             session.add(new_adr)

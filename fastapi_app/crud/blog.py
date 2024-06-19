@@ -12,7 +12,7 @@ blog_router = APIRouter(prefix="/blogs")
 
 
 @blog_router.get('/')
-async def get_blogs():
+async def get_blogs( Authentiztion: AuthJWT = Depends()):
     try:
         Authentiztion.jwt_required()
 
@@ -94,7 +94,9 @@ async def create(blog: BlogBase, Authentiztion: AuthJWT = Depends()):
         new_adr = Blog(
             id=blog.id,
             text=blog.text,
-            user_id=blog.user_id
+            user_id=blog.user_id,
+            created_time=blog.created_time,
+            slug=blog.slug
         )
         session.add(new_adr)
         session.commit()

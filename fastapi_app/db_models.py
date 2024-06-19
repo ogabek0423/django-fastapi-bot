@@ -40,6 +40,7 @@ class Category(Base):
     name = Column(String(100))
     last_update = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
     product = relationship("Product", back_populates="category")
+    slug = Column(String, unique=True)
 
 class Product(Base):
     __tablename__ = 'products'
@@ -53,6 +54,7 @@ class Product(Base):
     count = Column(Integer)
     created_date = Column(DateTime, default=datetime.datetime.utcnow)
     endurance = Column(Integer)
+    slug = Column(String, unique=True)
 
 
 class Coupon(Base):
@@ -95,6 +97,7 @@ class StaffInfo(Base):
     work_time = Column(String(100))
     phone = Column(String(20))
     experience = Column(Text)
+    slug = Column(String, unique=True)
 
 class Blog(Base):
     __tablename__ = 'blog'
@@ -102,7 +105,8 @@ class Blog(Base):
     text = Column(Text)
     user_id = Column(Integer, ForeignKey('auth_user.id'))
     user = relationship('User', back_populates='blog')
-    created_time = Column(DateTime, default=datetime.datetime.utcnow)
+    created_time = Column(DateTime, auto_now_add=True)
+    slug = Column(String, max_length=100, unique=True)
 
 class Problem(Base):
     __tablename__ = 'problems'
@@ -110,3 +114,4 @@ class Problem(Base):
     problem_text = Column(Text)
     user_email = Column(String, index=True)
     created_time = Column(DateTime, default=datetime.datetime.utcnow)
+    slug = Column(String, max_length=100, unique=True)

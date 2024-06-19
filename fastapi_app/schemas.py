@@ -40,6 +40,7 @@ class TelegramUserBase(BaseModel):
 class CategoryBase(BaseModel):
     name: str
     id: int
+    slug: str
 
 
 
@@ -52,6 +53,7 @@ class ProductBase(BaseModel):
     count: int
     endurance: int
     id: int
+    slug: str
 
 
 
@@ -89,19 +91,22 @@ class StaffInfoBase(BaseModel):
     phone: str
     experience: str
     id: int
+    slug: str
 
 
 class BlogBase(BaseModel):
     text: str
     user_id: int
     id: int
-
+    created_time: str
+    slug: str
 
 
 class ProblemBase(BaseModel):
     problem_text: str
     user_email: str
     id: int
+    slug: str
 
 
 class JwtModel(BaseModel):

@@ -287,6 +287,15 @@ class AddProblem(LoginRequiredMixin, View):
 
     def post(self, request):
         form = ProblemForm(request.POST)
+
+        # problem_text = request.POST['problem']
+        # email = request.POST['user_email']
+        # slug = request.POST['slug']
+        # data = Problem.objects.create(
+        #     problem_text=problem_text,
+        #     user_email=email,
+        #     slug=slug
+        # )
         if form.is_valid():
             form.save()
             return redirect('thanks')

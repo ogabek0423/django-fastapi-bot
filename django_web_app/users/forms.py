@@ -57,7 +57,7 @@ class BlogForm(forms.ModelForm):
 class ProblemForm(forms.ModelForm):
     class Meta:
         model = Problem
-        fields = ['problem_text', 'user_email']
+        fields = ['problem_text', 'user_email', 'slug']
 
     def save(self, commit=True):
         data = super().save(commit)

@@ -12,7 +12,7 @@ staff_info_router = APIRouter(prefix="/staff_info", tags=["staff_info"])
 
 
 @staff_info_router.get('/')
-async def get_users():
+async def get_users(Authentiztion: AuthJWT = Depends()):
     try:
         Authentiztion.jwt_required()
 
@@ -112,7 +112,7 @@ async def create_user(user: StaffInfoBase, Authentiztion: AuthJWT = Depends()):
             return HTTPException(status_code=status.HTTP_201_CREATED, detail="user has been added")
         else:
             return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="user does not exist")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can create new addresses")
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can create new ")
 
 
 @staff_info_router.put('/{id}')
@@ -152,11 +152,11 @@ async def update(id: int, user: StaffInfoBase, Authentiztion: AuthJWT = Depends(
                     }
                     return jsonable_encoder(data)
                 return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Berilgan id da malumot mavjud!")
-            return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="berilgan city id mavjud emas!")
+            return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="berilgan user id mavjud emas!")
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Malumot topilmadi")
 
 
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Only admins can edit this address')
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Only admins can edit this')
 
 
 @staff_info_router.delete('/{id}')
@@ -177,4 +177,4 @@ async def delete_user(id: int, Authentiztion: AuthJWT = Depends()):
             return HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Deleted")
 
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Malumot topilmadi")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can delete this address")
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can delete this")

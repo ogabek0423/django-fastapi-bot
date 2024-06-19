@@ -14,7 +14,7 @@ cupon_router = APIRouter(prefix="/coupons", tags=["coupons"])
 
 
 @cupon_router.get("/")
-async def get_all():
+async def get_all(Authentiztion: AuthJWT = Depends()):
     try:
         Authentiztion.jwt_required()
 
@@ -38,7 +38,7 @@ async def get_all():
 
 
 @cupon_router.get("/{id}")
-async def get_c(id: int):
+async def get_c(id: int, Authentiztion: AuthJWT = Depends()):
     try:
         Authentiztion.jwt_required()
 
@@ -73,7 +73,7 @@ async def create_c(cup: CouponBase, Authentiztion: AuthJWT = Depends()):
     if check_user.is_superuser:
         c_check = session.query(Coupon).filter(Coupon.id == cup.id).first()
         if c_check:
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Category already exists")
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="coupon already exists")
 
         new_c = Coupon(
             id=cup.id,
@@ -82,7 +82,7 @@ async def create_c(cup: CouponBase, Authentiztion: AuthJWT = Depends()):
         )
         session.add(new_c)
         session.commit()
-        return HTTPException(status_code=status.HTTP_201_CREATED, detail="cat created successfully")
+        return HTTPException(status_code=status.HTTP_201_CREATED, detail="coupon created successfully")
     return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="only admin has permission")
 
 
@@ -114,7 +114,7 @@ async def update_c(id: int, c: CouponBase, Authentiztion: AuthJWT = Depends()):
             return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="yangi berilgan id da malumot mavjud!")
 
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can update city')
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can update coupon')
 
 
 @cupon_router.delete("/{id}")
@@ -135,5 +135,5 @@ async def delete_c(id: int, Authentiztion: AuthJWT = Depends()):
             return HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Deleted")
 
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can delete city')
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can delete coupon')
 

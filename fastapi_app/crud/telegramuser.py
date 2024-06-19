@@ -13,7 +13,7 @@ tg_router = APIRouter(prefix="/tg", tags=["tg"])
 
 
 @tg_router.get('/')
-async def get_users():
+async def get_users(Authentiztion: AuthJWT = Depends()):
     try:
         Authentiztion.jwt_required()
 
@@ -93,7 +93,7 @@ async def create_user(tg_user: TelegramUserBase, Authentiztion: AuthJWT = Depend
         session.commit()
 
         return HTTPException(status_code=status.HTTP_201_CREATED, detail="user has been added")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can create new addresses")
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can create new ")
 
 
 @tg_router.put('/{id}')
@@ -133,9 +133,9 @@ async def update_address(id: int, user: TelegramUserBase, Authentiztion: AuthJWT
                     }
                     return jsonable_encoder(data)
                 return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Berilgan id da malumot mavjud!")
-            return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="berilgan city id mavjud emas!")
+            return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="berilgan username ishlatilgan!")
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Malumot topilmadi")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Only admins can edit this address')
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Only admins can edit this ')
 
 
 @tg_router.delete('/{id}')
@@ -156,4 +156,4 @@ async def delete_user(id: int, Authentiztion: AuthJWT = Depends()):
             return HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Deleted")
 
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Malumot topilmadi")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can delete this address")
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can delete this")

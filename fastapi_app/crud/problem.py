@@ -14,7 +14,7 @@ problem_router = APIRouter(prefix="/problems", tags=["problems"])
 
 
 @problem_router.get("/")
-async def get_all():
+async def get_all(Authentiztion: AuthJWT = Depends()):
     try:
         Authentiztion.jwt_required()
 
@@ -39,7 +39,7 @@ async def get_all():
 
 
 @problem_router.get("/{id}")
-async def get_c(id: int):
+async def get_c(id: int, Authentiztion: AuthJWT = Depends()):
     try:
         Authentiztion.jwt_required()
 
@@ -84,7 +84,7 @@ async def create_c(pro: ProblemBase, Authentiztion: AuthJWT = Depends()):
         )
         session.add(new_c)
         session.commit()
-        return HTTPException(status_code=status.HTTP_201_CREATED, detail="cat created successfully")
+        return HTTPException(status_code=status.HTTP_201_CREATED, detail="problem created successfully")
     return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="only admin has permission")
 
 
@@ -116,7 +116,7 @@ async def update_c(id: int, pro: ProblemBase, Authentiztion: AuthJWT = Depends()
             return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="yangi berilgan id da malumot mavjud!")
 
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can update city')
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can update problem')
 
 
 @problem_router.delete("/{id}")
@@ -137,5 +137,5 @@ async def delete_c(id: int, Authentiztion: AuthJWT = Depends()):
             return HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Deleted")
 
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can delete city')
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can delete problem')
 

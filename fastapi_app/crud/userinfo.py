@@ -13,75 +13,75 @@ user_info_router = APIRouter(prefix="/user_info", tags=["user_info"])
 
 
 @user_info_router.get('/')
-async def get_users():
-    # try:
-    #     Authentiztion.jwt_required()
-    #
-    # except:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
-    #
-    # check_user_token = Authentiztion.get_jwt_subject()
-    # check_user = session.query(User).filter(User.username == check_user_token).first()
-    # if check_user.is_active:
-    users = session.query(UserInfo).all()
-    context = [
-        {
-            "id": data.id,
-            "user":{
-                "first_name": data.user.first_name,
-                "last_name": data.user.last_name,
-                "username": data.user.username,
-                "email": data.user.email,
-            },
-            "photo": data.your_photo,
-            "city": data.city,
-            "street": data.street,
-            "home_number": data.home_number,
-            "user_number": data.user_number,
-            "updated": data.last_update
+async def get_users(Authentiztion: AuthJWT = Depends()):
+    try:
+        Authentiztion.jwt_required()
 
-        }
-        for data in users
-    ]
+    except:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
 
-    return jsonable_encoder(context)
-# return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
+    check_user_token = Authentiztion.get_jwt_subject()
+    check_user = session.query(User).filter(User.username == check_user_token).first()
+    if check_user.is_active:
+        users = session.query(UserInfo).all()
+        context = [
+            {
+                "id": data.id,
+                "user":{
+                    "first_name": data.user.first_name,
+                    "last_name": data.user.last_name,
+                    "username": data.user.username,
+                    "email": data.user.email,
+                },
+                "photo": data.your_photo,
+                "city": data.city,
+                "street": data.street,
+                "home_number": data.home_number,
+                "user_number": data.user_number,
+                "updated": data.last_update
+
+            }
+            for data in users
+        ]
+
+        return jsonable_encoder(context)
+    return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
 
 
 @user_info_router.get('/{id}')
 async def get_user(id: int, Authentiztion: AuthJWT = Depends()):
-    # try:
-    #     Authentiztion.jwt_required()
-    #
-    # except:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
-    #
-    # check_user_token = Authentiztion.get_jwt_subject()
-    # check_user = session.query(User).filter(User.username == check_user_token).first()
-    # if check_user.is_active:
-    user = session.query(UserInfo).filter(UserInfo.id ==id).first()
-    data = user
-    context = [
-        {
-            "id": data.id,
-            "user":{
-                "first_name": data.user.first_name,
-                "last_name": data.user.last_name,
-                "username": data.user.username,
-                "email": data.user.email,
-            },
-            "photo": data.your_photo,
-            "city": data.city,
-            "street": data.street,
-            "home_number": data.home_number,
-            "user_number": data.user_number,
-            "updated": data.last_update
-        }
+    try:
+        Authentiztion.jwt_required()
 
-    ]
+    except:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
 
-    return jsonable_encoder(context)
-    # return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
+    check_user_token = Authentiztion.get_jwt_subject()
+    check_user = session.query(User).filter(User.username == check_user_token).first()
+    if check_user.is_active:
+        user = session.query(UserInfo).filter(UserInfo.id ==id).first()
+        data = user
+        context = [
+            {
+                "id": data.id,
+                "user":{
+                    "first_name": data.user.first_name,
+                    "last_name": data.user.last_name,
+                    "username": data.user.username,
+                    "email": data.user.email,
+                },
+                "photo": data.your_photo,
+                "city": data.city,
+                "street": data.street,
+                "home_number": data.home_number,
+                "user_number": data.user_number,
+                "updated": data.last_update
+            }
+
+        ]
+
+        return jsonable_encoder(context)
+    return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
 
 
 @user_info_router.post('/create')
@@ -116,7 +116,7 @@ async def create_user(user: UserInfoBase, Authentiztion: AuthJWT = Depends()):
             return HTTPException(status_code=status.HTTP_201_CREATED, detail="user has been added")
         else:
             return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="user does not exist")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can create new addresses")
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can create new ")
 
 
 @user_info_router.put('/{id}')
@@ -156,9 +156,9 @@ async def update(id: int, user: UserInfoBase, Authentiztion: AuthJWT = Depends()
                     }
                     return jsonable_encoder(data)
                 return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Berilgan id da malumot mavjud!")
-            return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="berilgan city id mavjud emas!")
+            return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="berilgan user id mavjud emas!")
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Malumot topilmadi")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Only admins can edit this address')
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Only admins can edit this ')
 
 
 @user_info_router.delete('/{id}')
@@ -179,4 +179,4 @@ async def delete_user(id: int, Authentiztion: AuthJWT = Depends()):
             return HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Deleted")
 
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Malumot topilmadi")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can delete this address")
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Only admins can delete this ")

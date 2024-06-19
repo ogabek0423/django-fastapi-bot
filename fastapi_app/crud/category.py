@@ -14,7 +14,7 @@ category_router = APIRouter(prefix="/category", tags=["category"])
 
 
 @category_router.get("/")
-async def get_all():
+async def get_all(Authentiztion: AuthJWT = Depends()):
     try:
         Authentiztion.jwt_required()
 
@@ -38,7 +38,7 @@ async def get_all():
 
 
 @category_router.get("/{id}")
-async def get_c(id: int):
+async def get_c(id: int, Authentiztion: AuthJWT = Depends()):
     try:
         Authentiztion.jwt_required()
 
@@ -113,7 +113,7 @@ async def update_c(id: int, c: CategoryBase, Authentiztion: AuthJWT = Depends())
             return HTTPException(status_code=status.HTTP_409_CONFLICT, detail="yangi berilgan id da malumot mavjud!")
 
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can update city')
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can update category')
 
 
 @category_router.delete("/{id}")
@@ -134,5 +134,5 @@ async def delete_c(id: int, Authentiztion: AuthJWT = Depends()):
             return HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Deleted")
 
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
-    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can delete city')
+    return HTTPException(status_code=status.HTTP_409_CONFLICT, detail='only admins can delete category')
 

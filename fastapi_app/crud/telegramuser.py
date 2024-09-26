@@ -6,7 +6,7 @@ from fastapi import HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi_jwt_auth import AuthJWT
 from django.contrib.auth.hashers import make_password, check_password
-
+Telegramuser = TelegramUser
 
 session = Session(bind=ENGINE)
 tg_router = APIRouter(prefix="/tg", tags=["tg"])
@@ -51,18 +51,24 @@ async def get_user(id: int, Authentiztion: AuthJWT = Depends()):
     check_user_token = Authentiztion.get_jwt_subject()
     check_user = session.query(User).filter(User.username == check_user_token).first()
     if check_user.is_active:
-        user = session.query(Telegramuser).filter(Telegramuser.id ==id).first()
-        data = user
-        context = [
-            {
-                "id": data.id,
-                "full_name": data.fullname,
-                "chat_id": data.chat_id,
-                "username": data.username,
-                "joined": data.created_time,
-            }
+        try:
+            user = session.query(Telegramuser).filter(Telegramuser.id ==id).first()
+            data = user
+            context = [
+                {
+                    "id": data.id,
+                    "full_name": data.fullname,
+                    "chat_id": data.chat_id,
+                    "username": data.username,
+                    "joined": data.created_time,
+                }
 
-        ]
+            ]
+
+        except:
+            return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='id is none')
+
+
 
         return jsonable_encoder(context)
     return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
@@ -107,9 +113,9 @@ async def update_address(id: int, user: TelegramUserBase, Authentiztion: AuthJWT
     check_user_token = Authentiztion.get_jwt_subject()
     check_user = session.query(User).filter(User.username == check_user_token).first()
     if check_user.is_superuser:
-        adr_check = session.query(Telegramuser).filter(Telegramuser.id == id).first()
-        new_id_check = session.query(Telegramuser).filter(Telegramuser.id == user.id).first()
-        username_check = session.query(Telegramuser).filter(Telegramuser.username == user.username).first()
+        adr_check = session.query(TelegramUser).filter(TelegramUser.id == id).first()
+        new_id_check = session.query(TelegramUser).filter(TelegramUser.id == user.id).first()
+        username_check = session.query(TelegramUser).filter(TelegramUser.username == user.username).first()
         if adr_check:
             if username_check is None or adr_check.username == user.username:
                 if new_id_check is None:

@@ -5,6 +5,7 @@ from django.views import View
 from .models import *
 from .forms import *
 from users.models import *
+from django.http import HttpResponse
 
 class PrListView(LoginRequiredMixin, View):
     def get(self, request):
@@ -68,7 +69,7 @@ class AddProduct(LoginRequiredMixin, View):
             form.save()
             return redirect('shop')
         else:
-            return render(request, 'product_form.html', status=status.HTTP_400_BAD_REQUEST)
+            return render(request, 'product_form.html', status=400)
 
 
 class CouponView(LoginRequiredMixin, View):
